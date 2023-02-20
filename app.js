@@ -1,54 +1,84 @@
-function Board() {
-    const rows = 3;
-    const columns = 3;
-    const board = [];
-
-    for (let i = 0; i < rows; i++) {
-        board[i] = [];
-        for(let j = 0; j < columns; j++) {
-            board[i].push(Cell());
-        }
+const gameBoard = (() => {
+    const board = ["", "", "", "", "", "", "", "", ""];
+  
+    const setSquare = (i, marker) => {
+      if (i > board.length) return;
+      board[i] = marker;
+      console.log(board);
     }
-    // Render board
-    const getBoard = () => board;
-
-    const makeTurn = (row, column, player) {
-        const availableCells = board.filter((row) => row[column].getValue === 0).map(row => row[column]);
-        if (!availableCells.length) return;
-
+    const getSquare = i => {
+      if (i > board.length) return;
+      return board[i];
     }
-
-    return { getBoard, makeTurn };
-}
-
-function Cell() {
-    let value = 0;
-}
-
-function GameController (
-    playerOne = "Player One",
-    playerTwo = "Player Two"
-) {
-    const board = Board();
-
-    const players = [
-        {
-            name: playerOne,
-            token: 1
-        },
-        {
-            name: playerTwo,
-            token: 2
-        }
-    ];
-
-    let activePlayer = players[0];
-
-    activePlayer = activePlayer === players[0] ? players[0] : players[i];
-
-    const getActivePlayer = () => activePlayer;
-
-    const displayNewRound = () => {
-        console.log(`${getActivePlayer().name}'s turn.`);
+  
+    const reset = () => {
+      for (let i = 0; i < board.length; i++) {
+        board[i] = "";
+      }
     }
-}
+  
+    return { setSquare, getSquare, reset };
+  })();
+  
+  function Player(marker) {
+    this.marker = marker;
+  
+    const getMarker = () => { return marker };
+  
+    return { getMarker };
+  }
+  
+  
+  const gameController = (() => {
+    const playerOne = Player("X");
+    const playerTwo = Player("O");
+  
+    let round = 1;
+    let gameOver = false;
+  
+    const playRound = (i) => {
+      gameBoard.setSquare(i, getCurrentMarker());
+      round++;
+      console.log(round);
+    }
+  
+    const getCurrentMarker = () => {
+      return round % 2 === 1 ? playerOne.getMarker() : playerTwo.getMarker();
+    }
+  
+    if(round === 9) {
+      return isOver = true;
+    }
+  
+    return { playRound, getCurrentMarker }
+  })();
+  
+  const displayController = (() => {
+    const squares = document.querySelectorAll('.square');
+    const message = document.querySelector('.message');
+    const reset = document.querySelector('.reset');
+  
+    squares.forEach((square, i) => {
+      square.setAttribute('data-attribute', i);
+    });
+  
+    const addClickHandler = (square, getCurrentMarker) => {
+      square.addEventListener("click", e => {
+        square.innerHTML = getCurrentMarker();
+        const currentSquareIndex = square.getAttribute('data-attribute');
+        gameController.playRound(currentSquareIndex);
+      });
+    };
+  
+    squares.forEach(square => {
+      addClickHandler(square, gameController.getCurrentMarker);
+    });
+  
+    reset.addEventListener("click", () => {
+      squares.forEach(square => {
+        square.innerHTML = '';
+      })
+    })
+  
+  })();
+  

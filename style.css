@@ -2,11 +2,15 @@
     box-sizing: border-box;
 }
 .container {
-    max-width: 1000px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 .board {
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
+}
+.square {
+    aspect-ratio: 1 / 1;
 }
 body {
     background-color: black;
