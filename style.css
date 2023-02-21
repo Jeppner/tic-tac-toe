@@ -8,9 +8,23 @@
 .board {
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.5em;
 }
 .square {
     aspect-ratio: 1 / 1;
+    font-size: 3rem;
+    border-radius: 2px;
+    border: none;
+}
+.square:disabled {
+    background-color: #d3d3d3;
+    border: none;
+}
+.message {
+    margin-bottom: 1em;
+}
+.controls {
+    margin-top: 1em;
 }
 body {
     background-color: black;

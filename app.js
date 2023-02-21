@@ -1,8 +1,8 @@
 const gameBoard = (() => {
-    const board = ["", "", "", "", "", "", "", "", ""];
+    const board = ['', '', '', '', '', '', '', '', ''];
   
     const setSquare = (i, marker) => {
-      if (i > board.length) return;
+      if (i > board.length || board[i] != '') return;
       board[i] = marker;
       console.log(board);
     }
@@ -13,11 +13,12 @@ const gameBoard = (() => {
   
     const reset = () => {
       for (let i = 0; i < board.length; i++) {
-        board[i] = "";
+        board[i] = '';
       }
+      return;
     }
   
-    return { setSquare, getSquare, reset };
+    return { board, setSquare, getSquare, reset };
   })();
   
   function Player(marker) {
@@ -35,19 +36,37 @@ const gameBoard = (() => {
   
     let round = 1;
     let gameOver = false;
+
+    if(round === 9) {
+        return isOver = true;
+      }
   
     const playRound = (i) => {
       gameBoard.setSquare(i, getCurrentMarker());
+      checkForWinner();
       round++;
-      console.log(round);
     }
   
     const getCurrentMarker = () => {
       return round % 2 === 1 ? playerOne.getMarker() : playerTwo.getMarker();
     }
   
-    if(round === 9) {
-      return isOver = true;
+    function checkForWinner (board) {
+        board = gameBoard.board;
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        return winningCombinations
+        .filter((combination) => 
+        combination.every)
     }
   
     return { playRound, getCurrentMarker }
@@ -64,9 +83,11 @@ const gameBoard = (() => {
   
     const addClickHandler = (square, getCurrentMarker) => {
       square.addEventListener("click", e => {
-        square.innerHTML = getCurrentMarker();
+        if(square.textContent != '') return;
+        square.textContent = getCurrentMarker();
+        // square.setAttribute('disabled', '');
         const currentSquareIndex = square.getAttribute('data-attribute');
-        gameController.playRound(currentSquareIndex);
+        return gameController.playRound(currentSquareIndex);
       });
     };
   
@@ -77,8 +98,10 @@ const gameBoard = (() => {
     reset.addEventListener("click", () => {
       squares.forEach(square => {
         square.innerHTML = '';
+        square.removeAttribute('disabled');
+        gameBoard.reset();
       })
     })
-  
+
   })();
   
