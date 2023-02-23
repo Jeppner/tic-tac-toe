@@ -15,7 +15,7 @@ const gameBoard = (() => {
       for (let i = 0; i < board.length; i++) {
         board[i] = '';
       }
-      return;
+      return gameController.gameOverReset();
     }
   
     return { board, setSquare, getSquare, reset };
@@ -35,27 +35,49 @@ const gameBoard = (() => {
     const playerTwo = Player("O");
   
     let round = 1;
+    let winner;
     let gameOver = false;
+
+    const squares = document.querySelectorAll('.square');
 
     if(round === 9) {
         return gameOver = true;
       }
   
-    const playRound = (i) => {
-      gameBoard.setSquare(i, getCurrentMarker());
-      if(checkForWinner(i)) {
-        console.log('hi')
-      };
-      round++;
-    }
+      const playRound = (i) => {
+        gameBoard.setSquare(i, getCurrentMarker());
+        if (checkForWinner(i)) {
+          winner = getCurrentMarker();
+          gameOver = true;
+          displayController.setMessage();
+        }
+        round++;
+      
+        if (gameOver) {
+          squares.forEach(square => {
+            square.setAttribute('disabled', '');
+          });
+        }
+      }
+      
+      
   
     const getCurrentMarker = () => {
       return round % 2 === 1 ? playerOne.getMarker() : playerTwo.getMarker();
     }
+
+    const getCurrentPlayer = () => {
+        if(gameOver) {
+          return `The winner is ${winner}!`
+        } else {
+          return round % 2 === 1 ? 'Player One' : 'Player Two';
+        }
+      }
+      
   
-    function checkForWinner() {
+      function checkForWinner() {
         const board = gameBoard.board;
-        const winConditions = [    
+        const winConditions = [        
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
@@ -69,15 +91,17 @@ const gameBoard = (() => {
         for (let i = 0; i < winConditions.length; i++) {
           const [a, b, c] = winConditions[i];
           if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            console.log(`${getCurrentMarker()} wins!`);
-            return true;
+            return winner = board[a];
           }
         }
-      
         return false;
       }
+
+      const gameOverReset = () => {
+        gameOver = false;
+      }
   
-    return { playRound, getCurrentMarker }
+    return { playRound, getCurrentMarker, checkForWinner, gameOverReset, getCurrentPlayer }
   })();
   
   const displayController = (() => {
@@ -90,14 +114,19 @@ const gameBoard = (() => {
     });
   
     const addClickHandler = (square, getCurrentMarker) => {
-      square.addEventListener("click", e => {
+      square.addEventListener("click", () => {
         if(square.textContent != '') return;
         square.textContent = getCurrentMarker();
         square.setAttribute('disabled', '');
         const currentSquareIndex = square.getAttribute('data-attribute');
+        setMessage();
         return gameController.playRound(currentSquareIndex);
       });
     };
+
+    const setMessage = () => {
+        message.textContent = gameController.getCurrentPlayer()
+    }
   
     squares.forEach(square => {
       addClickHandler(square, gameController.getCurrentMarker);
@@ -107,9 +136,12 @@ const gameBoard = (() => {
       squares.forEach(square => {
         square.innerHTML = '';
         square.removeAttribute('disabled');
+        gameOver = false;
         gameBoard.reset();
       })
     })
+
+    return { setMessage }
 
   })();
   

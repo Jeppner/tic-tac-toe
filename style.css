@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 .container {
     max-width: 500px;
@@ -25,7 +26,4 @@
 }
 .controls {
     margin-top: 1em;
-}
-body {
-    background-color: black;
 }
