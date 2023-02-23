@@ -38,12 +38,14 @@ const gameBoard = (() => {
     let gameOver = false;
 
     if(round === 9) {
-        return isOver = true;
+        return gameOver = true;
       }
   
     const playRound = (i) => {
       gameBoard.setSquare(i, getCurrentMarker());
-      checkForWinner();
+      if(checkForWinner(i)) {
+        console.log('hi')
+      };
       round++;
     }
   
@@ -51,9 +53,9 @@ const gameBoard = (() => {
       return round % 2 === 1 ? playerOne.getMarker() : playerTwo.getMarker();
     }
   
-    function checkForWinner (board) {
-        board = gameBoard.board;
-        const winningCombinations = [
+    function checkForWinner() {
+        const board = gameBoard.board;
+        const winConditions = [    
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
@@ -63,11 +65,17 @@ const gameBoard = (() => {
             [0, 4, 8],
             [2, 4, 6],
         ];
-
-        return winningCombinations
-        .filter((combination) => 
-        combination.every)
-    }
+      
+        for (let i = 0; i < winConditions.length; i++) {
+          const [a, b, c] = winConditions[i];
+          if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            console.log(`${getCurrentMarker()} wins!`);
+            return true;
+          }
+        }
+      
+        return false;
+      }
   
     return { playRound, getCurrentMarker }
   })();
@@ -85,7 +93,7 @@ const gameBoard = (() => {
       square.addEventListener("click", e => {
         if(square.textContent != '') return;
         square.textContent = getCurrentMarker();
-        // square.setAttribute('disabled', '');
+        square.setAttribute('disabled', '');
         const currentSquareIndex = square.getAttribute('data-attribute');
         return gameController.playRound(currentSquareIndex);
       });
