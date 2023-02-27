@@ -28,7 +28,6 @@ function Player(marker) {
   return { getMarker };
 }
 
-
 const gameController = (() => {
   const playerOne = Player("X");
   const playerTwo = Player("O");
@@ -53,7 +52,7 @@ const gameController = (() => {
       console.log(winner);
       if(winner) {
         if(winner === 'draw') { return 'It was a draw! Play again?' };
-        winner = 'X' ? winner = 'Player One' : winner = 'Player Two';
+        winner === 'X' ? winner = 'Player One' : winner = 'Player Two';
         return `The winner is ${winner}!`;
       }
     } else if(gameOver) { 
