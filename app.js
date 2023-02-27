@@ -52,14 +52,14 @@ const gameController = (() => {
     if(gameEnded) { 
       console.log(winner);
       if(winner) {
-        return winner === 'draw' ? 'It was a draw! Play again?' : `The winner is ${winner}!`;
-      } else {
-        return 'It was a draw! Play again?';
+        if(winner === 'draw') { return 'It was a draw! Play again?' };
+        winner = 'X' ? winner = 'Player One' : winner = 'Player Two';
+        return `The winner is ${winner}!`;
       }
     } else if(gameOver) { 
       return round % 2 === 1 ? 'Player Two' : 'Player One';
     } else {
-      return round % 2 === 1 ? 'Player One' : 'Player Two';
+      return round % 2 === 1 ? 'Player Two' : 'Player One';
     }
   }
 
@@ -152,6 +152,7 @@ const displayController = (() => {
       square.innerHTML = '';
       square.removeAttribute('disabled');
       gameBoard.reset();
+      message.textContent = 'Tic Tac Toe! Player One starts.';
     })
   })
 
