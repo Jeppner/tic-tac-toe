@@ -74,10 +74,16 @@ const gameController = (() => {
       [0, 4, 8],
       [2, 4, 6],
     ];
-
+  
     for (let i = 0; i < winConditions.length; i++) {
       const [a, b, c] = winConditions[i];
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        const winningSquares = document.querySelectorAll(`[data-attribute="${a}"], [data-attribute="${b}"], [data-attribute="${c}"]`);
+        winningSquares.forEach((square, index) => {
+          setTimeout(() => {
+            square.classList.add('winning-square');
+          }, (index + 1) * 250);
+        });
         return board[a];
       }
     }
@@ -88,6 +94,7 @@ const gameController = (() => {
   
     return null;
   }
+  
   
   const playRound = (i) => {
     gameBoard.setSquare(i, getCurrentMarker());
@@ -150,6 +157,7 @@ const displayController = (() => {
     squares.forEach(square => {
       square.innerHTML = '';
       square.removeAttribute('disabled');
+      square.classList.remove('winning-square');
       gameBoard.reset();
       message.textContent = 'Tic Tac Toe! Player One starts.';
     })

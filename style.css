@@ -27,3 +27,15 @@
 .controls {
     margin-top: 1em;
 }
+.winning-square {
+    animation: winningColourChange .5s forwards;
+}
+
+@keyframes winningColourChange {
+    from {
+        background: #d3d3d3;
+    }
+    to {
+        background: rgb(110, 185, 110);
+    }
+}
