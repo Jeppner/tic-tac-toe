@@ -1,5 +1,5 @@
 const gameBoard = (() => {
-  const board = ['', '', '', '', '', '', '', '', ''];
+  const board = Array(9).fill('');
 
   const setSquare = (i, marker) => {
     if (i > board.length || board[i] != '') return;
@@ -36,6 +36,7 @@ const gameController = (() => {
   let round = 1;
   let winner = null;
   let gameOver = false;
+  let gameEnded = false;
 
   const squares = document.querySelectorAll('.square');
 
@@ -48,20 +49,22 @@ const gameController = (() => {
   }
 
   const getCurrentPlayer = () => {
-    if(gameOver) {
+    if(gameEnded) { 
       console.log(winner);
       if(winner) {
         return winner === 'draw' ? 'It was a draw! Play again?' : `The winner is ${winner}!`;
       } else {
         return 'It was a draw! Play again?';
       }
+    } else if(gameOver) { 
+      return round % 2 === 1 ? 'Player Two' : 'Player One';
     } else {
       return round % 2 === 1 ? 'Player One' : 'Player Two';
     }
   }
 
   function checkForWinner() {
-    const board = gameBoard.board;
+    const { board } = gameBoard;
     const winConditions = [
       [0, 1, 2],
       [3, 4, 5],
@@ -91,15 +94,18 @@ const gameController = (() => {
     gameBoard.setSquare(i, getCurrentMarker());
     winner = checkForWinner(i); // update the winner based on the return value of checkForWinner()
     if (winner) {
-      gameOver = true;
+      gameEnded = true;
       displayController.setMessage();
     }
     round++;
   
-    if (gameOver) {
+    if (gameEnded) { 
       squares.forEach(square => {
-        square.setAttribute('disabled', '');
+        square.disabled = true;
       });
+    } else if (round > 9) { // check if the maximum number of rounds has been reached
+      gameOver = true;
+      displayController.setMessage();
     }
   }
   
@@ -107,6 +113,7 @@ const gameController = (() => {
     gameOver = false;
     round = 1;
     winner = null;
+    gameEnded = false;
   }
 
   return { playRound, getCurrentMarker, checkForWinner, gameOverReset, getCurrentPlayer }
